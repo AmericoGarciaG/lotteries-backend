@@ -1,8 +1,12 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
-const app = express();
+const cors = require('cors');  // Importar cors
 
+const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Habilitar CORS
+app.use(cors());
 
 // Inicializar la base de datos SQLite
 const db = new sqlite3.Database('./db/lotteries.db');
@@ -21,4 +25,3 @@ app.get('/api/concursos', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
