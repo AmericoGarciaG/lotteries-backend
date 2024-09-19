@@ -1,11 +1,19 @@
 import express from 'express';
 import cors from 'cors';
+import logger from './logger.mjs'
 
 // Usamos createRequire para sqlite3 (que sigue siendo CommonJS)
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const sqlite3 = require('sqlite3').verbose();
 
+/*logger.silly('silly');
+logger.debug('debug');
+logger.verbose('verbose');
+logger.http('http');
+logger.warn('warn');
+logger.error('error');
+logger.info('Iniciando el sistema...');*/
 
 const app = express();
 const PORT = process.env.PORT || 3000;

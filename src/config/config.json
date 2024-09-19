@@ -2,7 +2,7 @@
     "env": "development",  
 
     "development": {
-        "fileLogLevel": "debug",
+        "fileLogLevel": "silly",
         "consoleLogLevel": "info",
         "defaultLogLevel": "debug",
         "logToConsole": true,
@@ -40,5 +40,5 @@
 
     "databasePath": "./src/db/lotteries.db",
 
-    "operationMode": "insertNewOnly"  
+    "operationMode": "insertNewOnly"
 }
