@@ -1,0 +1,44 @@
+{
+    "env": "development",  
+
+    "development": {
+        "fileLogLevel": "debug",
+        "consoleLogLevel": "info",
+        "defaultLogLevel": "debug",
+        "logToConsole": true,
+        "logToFile": true,
+        "logFileMaxSize": 5242880,  
+        "logFileMaxFiles": 5,        
+        "logFilePath": "./src/logs/development/debug.log"
+    },
+
+    "production": {
+        "fileLogLevel": "warn",
+        "consoleLogLevel": "warn",
+        "defaultLogLevel": "warn",
+        "logToConsole": false,        
+        "logToFile": true,            
+        "logFileMaxSize": 10485760,   
+        "logFileMaxFiles": 10,        
+        "logFilePath": "./src/logs/production/error.log"
+    },
+
+    "testing": {
+        "fileLogLevel": "info",
+        "consoleLogLevel": "info",
+        "defaultLogLevel": "info",
+        "logToConsole": true,
+        "logToFile": false,           
+        "logFileMaxSize": 5242880,
+        "logFileMaxFiles": 5,
+        "logFilePath": "./src/logs/testing/test.log"
+    },
+
+    "url": "https://www.loterianacional.gob.mx/Home/Historicos?ARHP=TQBlAGwAYQB0AGUA",
+    "saveDirectory": "./src/data",
+    "fileName": "downloaded_file.csv",
+
+    "databasePath": "./src/db/lotteries.db",
+
+    "operationMode": "insertNewOnly"  
+}

@@ -1,6 +1,11 @@
-const express = require('express');
+import express from 'express';
+import cors from 'cors';
+
+// Usamos createRequire para sqlite3 (que sigue siendo CommonJS)
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 const sqlite3 = require('sqlite3').verbose();
-const cors = require('cors');  // Importar cors
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,7 +14,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 
 // Inicializar la base de datos SQLite
-const db = new sqlite3.Database('./db/lotteries.db');
+const db = new sqlite3.Database('./src/db/lotteries.db');
 
 // Endpoint para obtener los concursos
 app.get('/api/concursos', (req, res) => {
