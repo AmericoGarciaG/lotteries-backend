@@ -11,7 +11,6 @@ const agent = new https.Agent({
 
 const configPath = './src/config/config.json';
 
-
 /**
  * Función para cargar el archivo de configuración config.json.
  * @returns {object} - Configuración cargada desde el archivo config.json.
@@ -62,7 +61,7 @@ const dbManager = new DBManager(config.databasePath);
             logger.warn(`Modo de operación desconocido: ${operationMode}.`);
         }
 
-        console.log('Operaciones completadas exitosamente!');
+        logger.info('Operaciones completadas exitosamente!');
     } catch (error) {
         logger.error(`Error durante la operación: ${error.message}`);
     } finally {
