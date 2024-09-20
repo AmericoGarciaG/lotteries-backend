@@ -2,10 +2,10 @@
   "name": "lotteries-backend",
   "version": "1.1.0",
   "type": "module",
-  "main": "index.mjs",
+  "main": "src/scripts/index.mjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/scripts/app.mjs"
+    "start": "node src/scripts/index.mjs"
   },
   "keywords": [],
   "author": "",
@@ -13,7 +13,10 @@
   "description": "",
   "dependencies": {
     "cors": "^2.8.5",
+    "csv-parser": "^3.0.0",
     "express": "^4.19.2",
+    "node-fetch": "^3.3.2",
+    "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7",
     "winston": "^3.14.2",
     "winston-daily-rotate-file": "^5.0.0"
