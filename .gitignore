@@ -2886,3 +2886,15 @@ node_modules/sqlite/build/utils/strings.js.map
 node_modules/sqlite/build/vendor-typings/sqlite3/index.d.ts
 src/data/downloaded_file.csv
 src/logs/development/debug.log.2024-09-20
+node_modules/fs/package.json
+node_modules/fs/README.md
+node_modules/https/package.json
+node_modules/js-combinatorics/combinatorics.d.ts
+node_modules/js-combinatorics/combinatorics.js
+node_modules/js-combinatorics/LICENSE
+node_modules/js-combinatorics/package.json
+node_modules/js-combinatorics/README.md
+node_modules/js-combinatorics/commonjs/combinatorics.js
+node_modules/js-combinatorics/commonjs/package.json
+node_modules/js-combinatorics/umd/combinatorics.js
+src/logs/development/debug.log.2024-09-23

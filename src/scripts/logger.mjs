@@ -1,6 +1,7 @@
 import winston from 'winston';
 import { readFileSync, existsSync } from 'fs';
 import winstonDailyRotateFile from 'winston-daily-rotate-file';
+import path from 'path';
 
 // Ruta al archivo de configuración
 const configPath = './src/config/config.json';
@@ -44,6 +45,21 @@ requiredParams.forEach(param => {
   }
 });
 
+// Función para obtener la información del stack trace (archivo, línea, método)
+const getStackInfo = () => {
+  const stacklist = (new Error()).stack.split('\n').slice(3);
+  const s = stacklist[0],
+        fileName = s.match(/\/([^\s]+)\)?/i)?.[1]?.split('/').pop() || 'unknown',
+        line = s.match(/:(\d+):\d+/)?.[1] || 'unknown';
+  return `${fileName}:${line}`;
+};
+
+// Formato personalizado para incluir archivo, clase, método y línea
+const customFormat = winston.format.printf(({ timestamp, level, message }) => {
+  const stackInfo = getStackInfo();
+  return `${timestamp} [${level}] [${stackInfo}] ${message}`;
+});
+
 // Crear los transportes de logs según el entorno
 const transports = [];
 
@@ -54,7 +70,8 @@ if (envConfig.logToConsole) {
       level: envConfig.consoleLogLevel || envConfig.defaultLogLevel,
       format: winston.format.combine(
         winston.format.colorize(),
-        winston.format.simple()
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        customFormat
       )
     })
   );
@@ -70,7 +87,7 @@ if (envConfig.logToFile) {
       maxFiles: envConfig.logFileMaxFiles || '5d', // Rotar un máximo de archivos
       format: winston.format.combine(
         winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-        winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+        customFormat
       )
     })
   );
@@ -81,7 +98,7 @@ const logger = winston.createLogger({
   level: envConfig.defaultLogLevel,
   format: winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
-    winston.format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`)
+    customFormat
   ),
   transports: transports
 });
