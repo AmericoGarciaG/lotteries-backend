@@ -216,9 +216,9 @@ export default class DBManager {
             throw new Error(`Error obteniendo datos: ${err.message}`);
         }
     }
-
+   
     async getConcursos(limit, offset) {
-        const query = `SELECT * FROM Concursos LIMIT ? OFFSET ?`;
+        const query = `SELECT * FROM Concursos ORDER BY CONCURSO DESC LIMIT ? OFFSET ?`;
         try {
             return await this.db.all(query, [limit, offset]);
         } catch (err) {
@@ -226,7 +226,6 @@ export default class DBManager {
             throw new Error("Failed to retrieve concursos");
         }
     }
-    
     
     // Implementar la función para obtener combinaciones frecuentes en DBManager.mjs
     async getFrequentCombinations(k) {
