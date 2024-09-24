@@ -4,6 +4,7 @@ import logger from './logger.mjs';
 import fs from 'fs';
 import csvParser from 'csv-parser';
 import path from 'path';
+import { combinations } from 'combinatorial-generators'; // Usaremos una librería para generar combinaciones de tamaño k
 
 /**
  * Clase DBManager
@@ -186,8 +187,6 @@ export default class DBManager {
         }
     }
     
-
-    
     /**
      * Ejecuta una consulta SQL.
      * @param {string} query - La consulta SQL a ejecutar.
@@ -217,6 +216,51 @@ export default class DBManager {
             throw new Error(`Error obteniendo datos: ${err.message}`);
         }
     }
+
+    async getConcursos(limit, offset) {
+        const query = `SELECT * FROM Concursos LIMIT ? OFFSET ?`;
+        try {
+            return await this.db.all(query, [limit, offset]);
+        } catch (err) {
+            logger.error(`Error al obtener los concursos: ${err.message}`);
+            throw new Error("Failed to retrieve concursos");
+        }
+    }
+    
+    
+    // Implementar la función para obtener combinaciones frecuentes en DBManager.mjs
+    async getFrequentCombinations(k) {
+        try {
+            // Obtener todos los concursos de la base de datos
+            const rows = await this.db.all("SELECT R1, R2, R3, R4, R5, R6 FROM Concursos");
+    
+            // Diccionario para contar la frecuencia de cada combinación
+            const combinationFrequency = {};
+    
+            // Iterar sobre cada concurso y generar combinaciones de tamaño k
+            for (const row of rows) {
+                const numbers = [row.R1, row.R2, row.R3, row.R4, row.R5, row.R6];
+    
+                // Generar todas las combinaciones de tamaño k
+                for (const combo of combinations(numbers, k)) {
+                    const sortedCombo = combo.sort((a, b) => a - b).join(','); // Ordenar y convertir a string para agrupar
+                    combinationFrequency[sortedCombo] = (combinationFrequency[sortedCombo] || 0) + 1;
+                }
+            }
+    
+            // Convertir el diccionario en un array de combinaciones y su frecuencia
+            const result = Object.entries(combinationFrequency)
+                .map(([combination, frequency]) => ({ combination, frequency }))
+                .sort((a, b) => b.frequency - a.frequency) // Ordenar por frecuencia descendente
+                .slice(0, 20); // Limitar a las 10 combinaciones más frecuentes
+    
+            return result;
+        } catch (err) {
+            logger.error(`Error al obtener las combinaciones más frecuentes: ${err.message}`);
+            throw new Error("Failed to retrieve frequent combinations");
+        }
+    }
+
 
     /**
      * Cierra la conexión a la base de datos.

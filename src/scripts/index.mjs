@@ -3,6 +3,7 @@ import logger from './logger.mjs';
 import DBManager from './DBManager.mjs';
 import fs from 'fs';
 import https from 'https';
+import app from './app.mjs';
 
 // Configurar un agente HTTPS que ignora la verificación de certificados
 const agent = new https.Agent({
@@ -29,7 +30,7 @@ function loadConfig() {
 const config = loadConfig();
 
 // Extraer los parámetros del archivo de configuración
-const { url, saveDirectory, fileName, operationMode } = config;
+const { url, saveDirectory, fileName, operationMode, maxPageSize } = config; // Incluye el límite de paginación
 
 // Crear instancia de FileManager y DBManager
 const fileManager = new FileManager(agent);
@@ -69,3 +70,12 @@ const dbManager = new DBManager(config.databasePath);
         await dbManager.close();
     }
 })();
+
+// Definir el puerto de la aplicación
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    logger.info(`Servidor iniciado en el puerto ${PORT}`);
+});
+
+
