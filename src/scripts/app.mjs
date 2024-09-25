@@ -43,9 +43,7 @@ app.get('/concursos', async (req, res) => {
         logger.error(`Error al obtener los concursos: ${error.message}`);
         res.status(500).json({ error: 'Error al obtener los concursos' });
     } finally {
-        if (await DBManager.isConnected()) {
-            await DBManager.close();
-        }
+        await DBManager.close();
     }
 });
 
@@ -66,9 +64,7 @@ app.get('/combinaciones', async (req, res) => {
         logger.error(`Error al obtener las combinaciones más frecuentes: ${error.message}`);
         res.status(500).json({ error: 'Error al obtener las combinaciones' });
     } finally {
-        if (await DBManager.isConnected()) {
-            await DBManager.close();
-        }
+        await DBManager.close();
     }
 });
 
@@ -81,9 +77,7 @@ app.get('/total-concursos', async (req, res) => {
         logger.error("Error fetching total concursos:", error);
         res.status(500).json({ error: 'Error fetching total concursos' });
     } finally {
-        if (await DBManager.isConnected()) {
-            await DBManager.close();
-        }
+        await DBManager.close();
     }
 });
 
@@ -99,9 +93,7 @@ app.post('/buscar-combinacion', async (req, res) => {
         logger.error('Error al buscar la combinación:', error);
         res.status(500).json({ error: 'Error al buscar la combinación.' });
     } finally {
-        if (await DBManager.isConnected()) {
-            await DBManager.close();
-        }
+        await DBManager.close();
     }
 });
 

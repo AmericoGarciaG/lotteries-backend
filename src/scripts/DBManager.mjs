@@ -260,32 +260,33 @@ export default class DBManager {
         }
     }
 
+    // Método para verificar si la base de datos está conectada
     async isConnected() {
         try {
-          // Intentar ejecutar una consulta simple
-          await this.db.get('SELECT 1');
-          return true;  // Si no hay errores, la conexión está abierta
-        } catch (err) {
-          return false;  // Si hay un error, la conexión no está en buen estado
+            const result = await this.db.get("SELECT 1"); // Realiza una consulta simple para probar la conexión
+            return true; // Si la consulta es exitosa, la conexión está activa
+        } catch (error) {
+            logger.error("Error verificando la conexión de la base de datos: " + error.message);
+            return false; // Si hay un error, la conexión no está activa
         }
-      }
+    }
       
     /**
      * Cierra la conexión a la base de datos.
      * @throws {Error} - Si ocurre un error al cerrar la conexión.
      */
     async close() {
-        if (this.db) {
-            try {
-                await this.db.close();
-                this.db = null;  // Asegurarse de que la referencia se elimine después de cerrar
-                logger.info("Conexión a la base de datos cerrada correctamente.");
-            } catch (err) {
-                logger.error("Error al cerrar la base de datos: " + err.message);
-            }
+        if (await this.isConnected()) { // Primero verifica si la conexión está activa
+          try {
+            await this.db.close();
+            this.db = null;
+            logger.info("Conexión a la base de datos cerrada correctamente.");
+          } catch (error) {
+            logger.error("Error al cerrar la base de datos: " + error.message);
+          }
         } else {
-            logger.warn("Intento de cerrar la base de datos cuando no está abierta.");
+          logger.warn("Intento de cerrar la base de datos cuando no está abierta.");
         }
-    }
+      }
     
 }
