@@ -260,6 +260,19 @@ export default class DBManager {
         }
     }
 
+    // Agregamos un nuevo método para encontrar combinaciones
+    async findCombination(numeros) {
+        try {
+            const placeholders = Array(numeros.length).fill('(R1 = ? OR R2 = ? OR R3 = ? OR R4 = ? OR R5 = ? OR R6 = ?)').join(' AND ');
+            const query = `SELECT COUNT(*) AS frecuencia FROM Concursos WHERE ${placeholders}`;
+            const result = await this.db.get(query, numeros);
+            return result.frecuencia;
+        } catch (error) {
+            logger.error(`Error al buscar combinación: ${error.message}`);
+            throw new Error("Error al buscar combinación");
+        }
+    }
+    
     // Método para verificar si la base de datos está conectada
     async isConnected() {
         try {

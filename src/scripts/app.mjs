@@ -86,13 +86,14 @@ app.post('/buscar-combinacion', async (req, res) => {
     try {
         await ensureDBConnection();
 
-        // Genera una consulta dinámica dependiendo de cuántos números se ingresen
-        const condiciones = numeros.map(() => '(R1 = ? OR R2 = ? OR R3 = ? OR R4 = ? OR R5 = ? OR R6 = ?)').join(' AND ');
-        const query = `SELECT COUNT(*) AS frecuencia FROM Concursos WHERE ${condiciones}`;
-        const params = [...numeros]; // Parámetros para la consulta
-        const result = await DBManager.get(query, params);
+        // Usamos el método findCombination desde DBManager
+        const frecuencia = await DBManager.findCombination(numeros);
 
-        res.json({ existe: result.frecuencia > 0, frecuencia: result.frecuencia });
+        if (frecuencia > 0) {
+            res.json({ existe: true, frecuencia });
+        } else {
+            res.json({ existe: false });
+        }
     } catch (error) {
         logger.error('Error al buscar la combinación:', error);
         res.status(500).json({ error: 'Error al buscar la combinación.' });
