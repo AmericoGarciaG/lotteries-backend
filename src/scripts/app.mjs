@@ -39,8 +39,10 @@ app.get('/concursos', async (req, res) => {
         logger.error(`Error al obtener los concursos: ${error.message}`);
         res.status(500).json({ error: 'Error al obtener los concursos' });
     } finally {
-        // Asegurarse de cerrar la conexión
-        await DBManager.close();
+        // Solo cerrar la conexión si está abierta
+        if (DBManager.db) {
+            await DBManager.close();
+        }
     }
 });
 
@@ -64,8 +66,10 @@ app.get('/combinaciones', async (req, res) => {
         logger.error(`Error al obtener las combinaciones más frecuentes: ${error.message}`);
         res.status(500).json({ error: 'Error al obtener las combinaciones' });
     } finally {
-        // Asegurarse de cerrar la conexión a la base de datos
-        await DBManager.close();
+        // Solo cerrar la conexión si está abierta
+        if (DBManager.db) {
+            await DBManager.close();
+        }
     }
 });
 
@@ -100,7 +104,10 @@ app.post('/buscar-combinacion', async (req, res) => {
       logger.error('Error al buscar la combinación:', error);
       res.status(500).json({ error: 'Error al buscar la combinación.' });
     } finally {
-      await DBManager.close();
+      // Solo cerrar la conexión si está abierta
+      if (DBManager.db) {
+        await DBManager.close();
+    }
     }
   });
   
