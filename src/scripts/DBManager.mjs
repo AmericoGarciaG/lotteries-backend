@@ -267,9 +267,16 @@ export default class DBManager {
      */
     async close() {
         if (this.db) {
-            await this.db.close();
+            try {
+                await this.db.close();
+                this.db = null;  // Asegurarse de que la referencia se elimine después de cerrar
+                logger.info("Conexión a la base de datos cerrada correctamente.");
+            } catch (err) {
+                logger.error("Error al cerrar la base de datos: " + err.message);
+            }
         } else {
-            console.warn("Database connection is not open.");
+            logger.warn("Intento de cerrar la base de datos cuando no está abierta.");
         }
     }
+    
 }

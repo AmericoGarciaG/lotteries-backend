@@ -78,13 +78,16 @@ app.get('/total-concursos', async (req, res) => {
         const result = await DBManager.get('SELECT COUNT(*) AS total FROM Concursos');
         res.json({ total: result.total });
     } catch (error) {
-        console.error("Error fetching total concursos:", error);
+        logger.error("Error fetching total concursos:", error);
         res.status(500).json({ error: 'Error fetching total concursos' });
     } finally {
-        // Asegurarse de cerrar la conexión
-        await DBManager.close();
+        // Solo cerrar la conexión si está abierta
+        if (DBManager.db) {
+            await DBManager.close();
+        }
     }
 });
+
 
 
 export default app;
