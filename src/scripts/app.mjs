@@ -85,8 +85,12 @@ app.post('/buscar-combinacion', async (req, res) => {
     const { numeros } = req.body;
     try {
         await ensureDBConnection();
-        const query = `SELECT COUNT(*) AS frecuencia FROM Concursos WHERE NPRODUCTO IN (${numeros.join(',')})`;
-        const result = await DBManager.get(query);
+
+        // Genera una consulta dinámica dependiendo de cuántos números se ingresen
+        const condiciones = numeros.map(() => '(R1 = ? OR R2 = ? OR R3 = ? OR R4 = ? OR R5 = ? OR R6 = ?)').join(' AND ');
+        const query = `SELECT COUNT(*) AS frecuencia FROM Concursos WHERE ${condiciones}`;
+        const params = [...numeros]; // Parámetros para la consulta
+        const result = await DBManager.get(query, params);
 
         res.json({ existe: result.frecuencia > 0, frecuencia: result.frecuencia });
     } catch (error) {
