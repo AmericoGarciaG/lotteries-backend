@@ -260,7 +260,16 @@ export default class DBManager {
         }
     }
 
-
+    async isConnected() {
+        try {
+          // Intentar ejecutar una consulta simple
+          await this.db.get('SELECT 1');
+          return true;  // Si no hay errores, la conexión está abierta
+        } catch (err) {
+          return false;  // Si hay un error, la conexión no está en buen estado
+        }
+      }
+      
     /**
      * Cierra la conexión a la base de datos.
      * @throws {Error} - Si ocurre un error al cerrar la conexión.
