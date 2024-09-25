@@ -88,6 +88,21 @@ app.get('/total-concursos', async (req, res) => {
     }
 });
 
-
+app.post('/buscar-combinacion', async (req, res) => {
+    const { numeros } = req.body;
+  
+    try {
+      const query = `SELECT COUNT(*) AS frecuencia FROM Concursos WHERE NPRODUCTO IN (${numeros.join(',')})`;
+      const result = await DBManager.get(query);
+  
+      res.json({ existe: result.frecuencia > 0, frecuencia: result.frecuencia });
+    } catch (error) {
+      logger.error('Error al buscar la combinación:', error);
+      res.status(500).json({ error: 'Error al buscar la combinación.' });
+    } finally {
+      await DBManager.close();
+    }
+  });
+  
 
 export default app;
