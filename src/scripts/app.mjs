@@ -69,5 +69,15 @@ app.get('/combinaciones', async (req, res) => {
     }
 });
 
+// En el archivo app.mjs o donde tengas las rutas configuradas
+app.get('/total-concursos', async (req, res) => {
+    try {
+      const result = await db.get('SELECT COUNT(*) AS total FROM Concursos');
+      res.json({ total: result.total });
+    } catch (error) {
+      console.error("Error fetching total concursos:", error);
+      res.status(500).json({ error: 'Error fetching total concursos' });
+    }
+  });
 
 export default app;
