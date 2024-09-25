@@ -69,5 +69,22 @@ app.get('/combinaciones', async (req, res) => {
     }
 });
 
+app.get('/total-concursos', async (req, res) => {
+    try {
+        // Conectar a la base de datos antes de hacer la consulta
+        await DBManager.connect();
+
+        // Realizar la consulta para obtener el número total de concursos
+        const result = await DBManager.get('SELECT COUNT(*) AS total FROM Concursos');
+        res.json({ total: result.total });
+    } catch (error) {
+        console.error("Error fetching total concursos:", error);
+        res.status(500).json({ error: 'Error fetching total concursos' });
+    } finally {
+        // Asegurarse de cerrar la conexión
+        await DBManager.close();
+    }
+});
+
 
 export default app;
