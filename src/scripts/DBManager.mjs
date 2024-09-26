@@ -265,7 +265,16 @@ export default class DBManager {
         try {
             const placeholders = Array(numeros.length).fill('(R1 = ? OR R2 = ? OR R3 = ? OR R4 = ? OR R5 = ? OR R6 = ?)').join(' AND ');
             const query = `SELECT COUNT(*) AS frecuencia FROM Concursos WHERE ${placeholders}`;
+
+            // Log para la consulta generada
+            logger.debug(`Consulta SQL generada: ${query}`);
+            logger.debug(`Parámetros de la consulta: ${numeros.join(', ')}`);
+
             const result = await this.db.get(query, numeros);
+
+            // Log para el resultado de la consulta
+            logger.debug(`Resultado de la consulta: ${result.frecuencia}`);
+
             return result.frecuencia;
         } catch (error) {
             logger.error(`Error al buscar combinación: ${error.message}`);
@@ -274,19 +283,19 @@ export default class DBManager {
     }
     
     // Método para verificar si la base de datos está conectada
-async isConnected() {
-    if (!this.db) {
-        logger.warn("Conexión a la base de datos no inicializada.");
-        return false;
+    async isConnected() {
+        if (!this.db) {
+            logger.warn("Conexión a la base de datos no inicializada.");
+            return false;
+        }
+        try {
+            const result = await this.db.get("SELECT 1");
+            return true; // Si la consulta es exitosa, la conexión está activa
+        } catch (error) {
+            logger.error("Error verificando la conexión de la base de datos: " + error.message);
+            return false; // Si hay un error, la conexión no está activa
+        }
     }
-    try {
-        const result = await this.db.get("SELECT 1");
-        return true; // Si la consulta es exitosa, la conexión está activa
-    } catch (error) {
-        logger.error("Error verificando la conexión de la base de datos: " + error.message);
-        return false; // Si hay un error, la conexión no está activa
-    }
-}
       
     /**
      * Cierra la conexión a la base de datos.
