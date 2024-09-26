@@ -274,32 +274,36 @@ export default class DBManager {
     }
     
     // Método para verificar si la base de datos está conectada
-    async isConnected() {
-        try {
-            const result = await this.db.get("SELECT 1"); // Realiza una consulta simple para probar la conexión
-            return true; // Si la consulta es exitosa, la conexión está activa
-        } catch (error) {
-            logger.error("Error verificando la conexión de la base de datos: " + error.message);
-            return false; // Si hay un error, la conexión no está activa
-        }
+async isConnected() {
+    if (!this.db) {
+        logger.warn("Conexión a la base de datos no inicializada.");
+        return false;
     }
+    try {
+        const result = await this.db.get("SELECT 1");
+        return true; // Si la consulta es exitosa, la conexión está activa
+    } catch (error) {
+        logger.error("Error verificando la conexión de la base de datos: " + error.message);
+        return false; // Si hay un error, la conexión no está activa
+    }
+}
       
     /**
      * Cierra la conexión a la base de datos.
      * @throws {Error} - Si ocurre un error al cerrar la conexión.
      */
     async close() {
-        if (await this.isConnected()) { // Primero verifica si la conexión está activa
-          try {
-            await this.db.close();
-            this.db = null;
-            logger.info("Conexión a la base de datos cerrada correctamente.");
-          } catch (error) {
-            logger.error("Error al cerrar la base de datos: " + error.message);
-          }
+        if (this.db && await this.isConnected()) {
+            try {
+                await this.db.close();
+                this.db = null; // Asegurarse de limpiar la referencia
+                logger.info("Conexión a la base de datos cerrada correctamente.");
+            } catch (error) {
+                logger.error("Error al cerrar la base de datos: " + error.message);
+            }
         } else {
-          logger.warn("Intento de cerrar la base de datos cuando no está abierta.");
+            logger.warn("Intento de cerrar una conexión a la base de datos que ya está cerrada o no fue inicializada.");
         }
-      }
+    }
     
 }
