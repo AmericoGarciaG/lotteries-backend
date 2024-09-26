@@ -260,27 +260,29 @@ export default class DBManager {
         }
     }
 
-    // Agregamos un nuevo método para encontrar combinaciones
-    async findCombination(numeros) {
-        try {
-            const placeholders = Array(numeros.length).fill('(R1 = ? OR R2 = ? OR R3 = ? OR R4 = ? OR R5 = ? OR R6 = ?)').join(' AND ');
-            const query = `SELECT COUNT(*) AS frecuencia FROM Concursos WHERE ${placeholders}`;
+    // Agregamos un nuevo método para encontrar combinaciones con menos de 6 números
+async findCombination(numeros) {
+    try {
+        const placeholders = Array(numeros.length).fill('(R1 = ? OR R2 = ? OR R3 = ? OR R4 = ? OR R5 = ? OR R6 = ?)').join(' AND ');
+        const query = `SELECT COUNT(*) AS frecuencia FROM Concursos WHERE ${placeholders}`;
 
-            // Log para la consulta generada
-            logger.debug(`Consulta SQL generada: ${query}`);
-            logger.debug(`Parámetros de la consulta: ${numeros.join(', ')}`);
+        // Log para la consulta generada
+        logger.debug(`Consulta SQL generada: ${query}`);
+        logger.debug(`Parámetros de la consulta: ${numeros.join(', ')}`);
 
-            const result = await this.db.get(query, numeros);
+        // Ejecutar consulta con cada número duplicado para hacer coincidir los placeholders
+        const params = numeros.reduce((acc, num) => acc.concat(Array(6).fill(num)), []);
+        const result = await this.db.get(query, params);
 
-            // Log para el resultado de la consulta
-            logger.debug(`Resultado de la consulta: ${result.frecuencia}`);
+        // Log para el resultado de la consulta
+        logger.debug(`Resultado de la consulta: ${result.frecuencia}`);
 
-            return result.frecuencia;
-        } catch (error) {
-            logger.error(`Error al buscar combinación: ${error.message}`);
-            throw new Error("Error al buscar combinación");
-        }
+        return result.frecuencia;
+    } catch (error) {
+        logger.error(`Error al buscar combinación: ${error.message}`);
+        throw new Error("Error al buscar combinación");
     }
+}
     
     // Método para verificar si la base de datos está conectada
     async isConnected() {
